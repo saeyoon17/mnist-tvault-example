@@ -78,8 +78,7 @@ def get_args_parser():
 
 def init_for_distributed(args):
 
-    print(os.environ["RANK"])
-    dist.init_process_group("gloo")
+    dist.init_process_group("gloo", rank=os.environ["RANK"], world_size=4)
     if args.local_rank is not None:
         print("Use GPU: {} for training".format(args.local_rank))
 
