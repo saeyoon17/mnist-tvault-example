@@ -116,7 +116,7 @@ if __name__ == "__main__":
     )
     print("debug-0")
     model = Net().cuda(args.local_rank)
-    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=args.gpu_ids)
+    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank])
     print("debug-1")
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
     train(model, 20, train_loader)
