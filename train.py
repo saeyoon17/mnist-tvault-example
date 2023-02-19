@@ -78,12 +78,10 @@ def get_args_parser():
 
 def init_for_distributed(args):
     # 2. init_process_group
-    dist.init_process_group(
-        backend="nccl",
-    )
+    os.environ["MASTER_ADDR"] = "127.0.0.1"
+    os.environ["MASTER_PORT"] = "1234"
 
-    # 1. setting for distributed training
-    torch.cuda.set_device(args.local_rank)
+    dist.init_process_group(backend="nccl", init_method="env://")
     if args.local_rank is not None:
         print("Use GPU: {} for training".format(args.local_rank))
 
