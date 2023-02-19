@@ -118,7 +118,7 @@ if __name__ == "__main__":
     model = Net()
     print(args.local_rank)
     print("debug-1")
-    model = model.to("cuda:" + str(args.local_rank))
+    model = model.to("cuda")
     print("debug-2")
     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank])
     print("debug-3")
