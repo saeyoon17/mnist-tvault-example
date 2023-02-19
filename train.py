@@ -81,7 +81,7 @@ def init_for_distributed(args):
     os.environ["MASTER_ADDR"] = "127.0.0.1"
     os.environ["MASTER_PORT"] = "1234"
 
-    dist.init_process_group(backend="nccl", init_method="env://")
+    dist.init_process_group(backend="nccl")
     if args.local_rank is not None:
         print("Use GPU: {} for training".format(args.local_rank))
 
