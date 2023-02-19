@@ -44,16 +44,17 @@ test_loader = torch.utils.data.DataLoader(
 )
 
 
-def train(model, epoch):
+def train(model, train_epoch):
     model.train()
-    for batch_idx, (data, target) in enumerate(train_loader):
-        optimizer.zero_grad()
-        output = model(data)
-        loss = F.nll_loss(output, target)
-        loss.backward()
-        optimizer.step()
-        if batch_idx % log_interval == 0:
-            print("Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(epoch, batch_idx * len(data), len(train_loader.dataset), 100.0 * batch_idx / len(train_loader), loss.item()))
+    for epoch in range(train_epoch):
+        for batch_idx, (data, target) in enumerate(train_loader):
+            optimizer.zero_grad()
+            output = model(data)
+            loss = F.nll_loss(output, target)
+            loss.backward()
+            optimizer.step()
+            if batch_idx % log_interval == 0:
+                print("Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(epoch, batch_idx * len(data), len(train_loader.dataset), 100.0 * batch_idx / len(train_loader), loss.item()))
 
 
 def test(model):
@@ -74,5 +75,5 @@ if __name__ == "__main__":
     # Model
     model = Net()
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-    train(model)
+    train(model, 20)
     test(model)
