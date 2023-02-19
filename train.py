@@ -46,15 +46,21 @@ test_loader = torch.utils.data.DataLoader(
 
 def train(model, train_epoch):
     model.train()
+    loss_acc = 0
     for epoch in range(train_epoch):
         for batch_idx, (data, target) in enumerate(train_loader):
             optimizer.zero_grad()
             output = model(data)
             loss = F.nll_loss(output, target)
+            import ipdb
+
+            ipdb.set_trace()
+
+            loss_acc += loss.item()
             loss.backward()
             optimizer.step()
-            if epoch % log_interval == 0:
-                print("Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(epoch, batch_idx * len(data), len(train_loader.dataset), 100.0 * batch_idx / len(train_loader), loss.item()))
+        if epoch % log_interval == 0:
+            print("Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(epoch, batch_idx * len(data), len(train_loader.dataset), 100.0 * batch_idx / len(train_loader), loss_acc))
 
 
 def test(model):
