@@ -13,6 +13,7 @@ import torch.nn.functional as F
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 from module import Net
+import argparse
 
 # seeding
 seed = 2023
@@ -62,24 +63,66 @@ def test(model, test_loader):
     print("\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n".format(test_loss, correct, len(test_loader.dataset), 100.0 * correct / len(test_loader.dataset)))
 
 
-if __name__ == "__main__":
-    # Model
-    train_loader = torch.utils.data.DataLoader(
-        torchvision.datasets.MNIST(
-            "/MNIST/", train=True, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
-        ),
-        batch_size=batch_size,
-        shuffle=True,
+def get_args_parser():
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--lr", type=float, default=0.01)
+    parser.add_argument("--epoch", type=int, default=90)
+    parser.add_argument("--batch_size", type=int, default=1024)
+    parser.add_argument("--rank", type=int, default=0)
+    parser.add_argument("--num_workers", type=int, default=16)
+    parser.add_argument("--gpu_ids", nargs="+", default=["0", "1", "2", "3"])
+    parser.add_argument("--world_size", type=int, default=0)
+    parser.add_argument("--local_rank", type=int, default=0)
+    return parser
+
+
+def init_for_distributed(args):
+    # 1. setting for distributed training
+    torch.cuda.set_device(args.local_rank)
+    if args.local_rank is not None:
+        print("Use GPU: {} for training".format(args.local_rank))
+
+    # 2. init_process_group
+    dist.init_process_group(
+        backend="nccl",
+        init_method="tcp://127.0.0.1:23456",
     )
 
-    test_loader = torch.utils.data.DataLoader(
-        torchvision.datasets.MNIST(
-            "/MNIST/", train=False, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
-        ),
+    print(args)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser("MNIST arg parser", parents=[get_args_parser()])
+    args = parser.parse_args()
+
+    # DDP
+    init_for_distributed(args)
+
+    # Model
+    train_dataset = torchvision.datasets.MNIST(
+        "/MNIST/", train=True, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
+    )
+    train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
+    train_loader = torch.utils.data.DataLoader(
+        train_dataset,
         batch_size=batch_size,
         shuffle=True,
+        sampler=train_sampler,
     )
+
+    test_dataset = torchvision.datasets.MNIST(
+        "/MNIST/", train=False, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
+    )
+    test_sampler = torch.utils.data.distributed.DistributedSampler(test_dataset)
+    test_loader = torch.utils.data.DataLoader(
+        test_dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        sampler=test_sampler,
+    )
+
     model = Net().to(device)
+    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=args.gpu_ids)
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
     train(model, 20, train_loader)
     test(model, test_loader)
