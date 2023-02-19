@@ -52,15 +52,11 @@ def train(model, train_epoch):
             optimizer.zero_grad()
             output = model(data)
             loss = F.nll_loss(output, target)
-            import ipdb
-
-            ipdb.set_trace()
-
-            loss_acc += loss.item()
+            loss_acc += loss.item() / batch_size
             loss.backward()
             optimizer.step()
         if epoch % log_interval == 0:
-            print("Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(epoch, batch_idx * len(data), len(train_loader.dataset), 100.0 * batch_idx / len(train_loader), loss_acc))
+            print(f"Train Epoch: {epoch} \tLoss: {loss_acc / len(train_loader)}")
 
 
 def test(model):
