@@ -1,5 +1,6 @@
 # Basic routines for trainning DL model
-# 1. Import necessary files
+# Source: https://nextjournal.com/gkoehler/pytorch-mnist
+# Import necessary files
 import os
 import torch
 import torch.distributed as dist
@@ -13,6 +14,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 
 from module import Net
 
+# seeding
 seed = 2023
 torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
@@ -42,15 +44,11 @@ test_loader = torch.utils.data.DataLoader(
 )
 
 
-network = Net()
-optimizer = optim.SGD(network.parameters(), lr=learning_rate, momentum=momentum)
-
-
-def train(mode, epoch):
-    network.train()
+def train(model, epoch):
+    model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         optimizer.zero_grad()
-        output = network(data)
+        output = model(data)
         loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
@@ -64,9 +62,17 @@ def test(model):
     correct = 0
     with torch.no_grad():
         for data, target in test_loader:
-            output = network(data)
+            output = model(data)
             test_loss += F.nll_loss(output, target, size_average=False).item()
             pred = output.data.max(1, keepdim=True)[1]
             correct += pred.eq(target.data.view_as(pred)).sum()
     test_loss /= len(test_loader.dataset)
     print("\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n".format(test_loss, correct, len(test_loader.dataset), 100.0 * correct / len(test_loader.dataset)))
+
+
+if __name__ == "__main__":
+    # Model
+    model = Net()
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+    train(model)
+    test(model)
