@@ -23,7 +23,7 @@ torch.backends.cudnn.enabled = False
 np.random.seed(seed)
 
 # configurations
-batch_size = 32
+batch_size = 128
 learning_rate = 1e-3
 log_interval = 10
 device = "cuda"
