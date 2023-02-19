@@ -77,16 +77,16 @@ def get_args_parser():
 
 
 def init_for_distributed(args):
-    # 1. setting for distributed training
-    torch.cuda.set_device(args.local_rank)
-    if args.local_rank is not None:
-        print("Use GPU: {} for training".format(args.local_rank))
-
     # 2. init_process_group
     dist.init_process_group(
         backend="nccl",
         init_method="tcp://127.0.0.1:23456",
     )
+
+    # 1. setting for distributed training
+    torch.cuda.set_device(args.local_rank)
+    if args.local_rank is not None:
+        print("Use GPU: {} for training".format(args.local_rank))
 
     print(args)
 
