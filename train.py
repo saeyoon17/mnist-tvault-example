@@ -34,6 +34,8 @@ def train(model, train_epoch, train_loader):
     loss_acc = 0
     for epoch in range(train_epoch):
         for batch_idx, (data, target) in enumerate(train_loader):
+            data.to(device)
+            target.to(device)
             optimizer.zero_grad()
             output = model(data)
             loss = F.nll_loss(output, target)
@@ -50,6 +52,8 @@ def test(model, test_loader):
     correct = 0
     with torch.no_grad():
         for data, target in test_loader:
+            data.to(device)
+            target.to(device)
             output = model(data)
             test_loss += F.nll_loss(output, target, size_average=False).item()
             pred = output.data.max(1, keepdim=True)[1]
@@ -63,7 +67,7 @@ if __name__ == "__main__":
     train_loader = torch.utils.data.DataLoader(
         torchvision.datasets.MNIST(
             "/MNIST/", train=True, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
-        ).to(device),
+        ),
         batch_size=batch_size,
         shuffle=True,
     )
@@ -71,7 +75,7 @@ if __name__ == "__main__":
     test_loader = torch.utils.data.DataLoader(
         torchvision.datasets.MNIST(
             "/MNIST/", train=False, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
-        ).to(device),
+        ),
         batch_size=batch_size,
         shuffle=True,
     )
