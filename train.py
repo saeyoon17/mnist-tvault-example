@@ -102,7 +102,6 @@ if __name__ == "__main__":
     train_loader = torch.utils.data.DataLoader(
         train_dataset,
         batch_size=batch_size,
-        shuffle=True,
         sampler=train_sampler,
     )
 
@@ -113,7 +112,6 @@ if __name__ == "__main__":
     test_loader = torch.utils.data.DataLoader(
         test_dataset,
         batch_size=batch_size,
-        shuffle=True,
         sampler=test_sampler,
     )
 
