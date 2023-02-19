@@ -114,9 +114,10 @@ if __name__ == "__main__":
         batch_size=batch_size,
         sampler=test_sampler,
     )
-
+    print("debug-0")
     model = Net().to(device)
     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=args.gpu_ids)
+    print("debug-1")
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
     train(model, 20, train_loader)
     test(model, test_loader)
