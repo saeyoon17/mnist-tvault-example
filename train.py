@@ -77,9 +77,6 @@ def get_args_parser():
 
 
 def init_for_distributed(args):
-    # 2. init_process_group
-    os.environ["MASTER_ADDR"] = "127.0.0.1"
-    os.environ["MASTER_PORT"] = "29500"
 
     dist.init_process_group(backend="nccl")
     if args.local_rank is not None:
