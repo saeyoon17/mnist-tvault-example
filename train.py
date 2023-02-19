@@ -26,25 +26,10 @@ np.random.seed(seed)
 batch_size = 32
 learning_rate = 1e-3
 log_interval = 10
-
-train_loader = torch.utils.data.DataLoader(
-    torchvision.datasets.MNIST(
-        "/MNIST/", train=True, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
-    ),
-    batch_size=batch_size,
-    shuffle=True,
-)
-
-test_loader = torch.utils.data.DataLoader(
-    torchvision.datasets.MNIST(
-        "/MNIST/", train=False, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
-    ),
-    batch_size=batch_size,
-    shuffle=True,
-)
+device = "cuda"
 
 
-def train(model, train_epoch):
+def train(model, train_epoch, train_loader):
     model.train()
     loss_acc = 0
     for epoch in range(train_epoch):
@@ -59,7 +44,7 @@ def train(model, train_epoch):
             print(f"Train Epoch: {epoch} \tLoss: {loss_acc / len(train_loader)}")
 
 
-def test(model):
+def test(model, test_loader):
     model.eval()
     test_loss = 0
     correct = 0
@@ -75,7 +60,22 @@ def test(model):
 
 if __name__ == "__main__":
     # Model
-    model = Net()
+    train_loader = torch.utils.data.DataLoader(
+        torchvision.datasets.MNIST(
+            "/MNIST/", train=True, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
+        ),
+        batch_size=batch_size,
+        shuffle=True,
+    ).to(device)
+
+    test_loader = torch.utils.data.DataLoader(
+        torchvision.datasets.MNIST(
+            "/MNIST/", train=False, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
+        ),
+        batch_size=batch_size,
+        shuffle=True,
+    ).to(device)
+    model = Net().to(device)
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-    train(model, 20)
-    test(model)
+    train(model, 20, train_loader)
+    test(model, test_loader)
