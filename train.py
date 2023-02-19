@@ -78,8 +78,7 @@ def get_args_parser():
 
 def init_for_distributed(args):
 
-    os.environ["MASTER_ADDR"] = "127.0.0.1"
-    os.environ["MASTER_PORT"] = "12355"
+    print(os.environ["RANK"])
     dist.init_process_group("gloo")
     if args.local_rank is not None:
         print("Use GPU: {} for training".format(args.local_rank))
