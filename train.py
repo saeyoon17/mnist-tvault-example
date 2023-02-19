@@ -80,6 +80,7 @@ def init_for_distributed(args):
 
     dist.init_process_group("gloo", rank=os.environ["RANK"], world_size=4)
     if args.local_rank is not None:
+        args.local_rank = os.environ["RANK"]
         print("Use GPU: {} for training".format(args.local_rank))
 
     print(args)
