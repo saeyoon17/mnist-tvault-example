@@ -71,7 +71,7 @@ def get_args_parser():
     parser.add_argument("--rank", type=int, default=0)
     parser.add_argument("--num_workers", type=int, default=16)
     parser.add_argument("--gpu_ids", nargs="+", default=["0", "1", "2", "3"])
-    parser.add_argument("--world_size", type=int, default=0)
+    parser.add_argument("--world_size", type=int, default=4)
     parser.add_argument("--local_rank", type=int, default=0)
     return parser
 
