@@ -78,10 +78,15 @@ def get_args_parser():
 
 def init_for_distributed(args):
 
-    local_rank = int(os.environ["RANK"])
-    # os.environ["MASTER_ADDR"] = "0.0.0.0"
-    # os.environ["MASTER_PORT"] = "1449"
-    world_size = 4
+    rank = int(os.environ["RANK"])
+    local_rank = int(os.environ["LOCAL_RANK"])
+    print(rank)
+    print(local_rank)
+    print(args.gpu_ids)
+
+    os.environ["MASTER_ADDR"] = "127.0.0.1"
+    os.environ["MASTER_PORT"] = "29500"
+    world_size = len(args.gpu_ids) * 4
     # initialize the process group
     dist.init_process_group("gloo", rank=local_rank, world_size=world_size)
     if args.local_rank is not None:
