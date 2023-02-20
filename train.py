@@ -75,17 +75,13 @@ def get_args_parser():
 
 
 def init_for_distributed(args):
-
     local_rank = int(os.environ["LOCAL_RANK"])
-    # initialize the process group
-    torch.cuda.set_device(args.local_rank)
-    torch.cuda.empty_cache()
     dist.init_process_group("nccl", init_method="env://")
     if args.local_rank is not None:
         args.local_rank = local_rank
         print("Use GPU: {} for training".format(args.local_rank))
-
-    print(args)
+        torch.cuda.set_device(args.local_rank)
+        torch.cuda.empty_cache()
 
 
 if __name__ == "__main__":
