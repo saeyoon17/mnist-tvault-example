@@ -120,7 +120,7 @@ class ResNet(nn.Module):
 
         x = x.view(x.size(0), -1)
         logits = self.fc(x)
-        probas = F.softmax(logits, dim=1)
+        probas = F.log_softmax(logits, dim=1)
         return probas
 
 
