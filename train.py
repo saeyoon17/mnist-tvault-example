@@ -85,7 +85,7 @@ def init_for_distributed(args):
     print(args.gpu_ids)
 
     # os.environ["MASTER_ADDR"] = "127.0.0.1"
-    os.environ["MASTER_PORT"] = "29500"
+    os.environ["MASTER_PORT"] = "2224"
     world_size = int(os.environ["WORLD_SIZE"])
     print(world_size)
     # initialize the process group
