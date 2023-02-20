@@ -84,14 +84,14 @@ def init_for_distributed(args):
     print(local_rank)
     print(args.gpu_ids)
 
-    os.environ["MASTER_ADDR"] = "127.0.0.1"
+    # os.environ["MASTER_ADDR"] = "127.0.0.1"
     # os.environ["MASTER_PORT"] = "2224"
     world_size = int(os.environ["WORLD_SIZE"])
-    print(world_size)
+
     # initialize the process group
     print("before init process group")
-    print(torch.distributed.is_nccl_available())
-    dist.init_process_group("nccl", rank=local_rank, world_size=world_size)
+    # torch.cuda.set_device(args.local_rank)
+    dist.init_process_group("nccl", init_method="env://")
     print("after init process group")
     if args.local_rank is not None:
         args.local_rank = local_rank
