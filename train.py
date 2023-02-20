@@ -79,6 +79,7 @@ def init_for_distributed(args):
     local_rank = int(os.environ["LOCAL_RANK"])
     # initialize the process group
     torch.cuda.set_device(args.local_rank)
+    torch.cuda.empty_cache()
     dist.init_process_group("nccl", init_method="env://")
     if args.local_rank is not None:
         args.local_rank = local_rank
