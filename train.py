@@ -105,11 +105,9 @@ if __name__ == "__main__":
     test_dataset = torchvision.datasets.MNIST(
         "/MNIST/", train=False, download=True, transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.1307,), (0.3081,))])
     )
-    test_sampler = torch.utils.data.distributed.DistributedSampler(test_dataset)
     test_loader = torch.utils.data.DataLoader(
         test_dataset,
         batch_size=batch_size,
-        sampler=test_sampler,
     )
     model = Net()
     model = model.to(args.local_rank)
@@ -117,4 +115,5 @@ if __name__ == "__main__":
     criterion = torch.nn.NLLLoss()
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
     train(model, 20, train_loader, args.local_rank, criterion)
-    test(model, test_loader, args.local_rank, criterion)
+    if args.local_rank == 0:
+        test(model, test_loader, args.local_rank, criterion)
