@@ -28,7 +28,7 @@ learning_rate = 1e-3
 log_interval = 10
 
 
-def train(model, train_epoch, train_loader, local_rank):
+def train(model, train_epoch, train_loader, local_rank, criterion):
     model.train()
     loss_acc = 0
     for epoch in range(train_epoch):
@@ -37,7 +37,7 @@ def train(model, train_epoch, train_loader, local_rank):
             target = target.to(local_rank)
             optimizer.zero_grad()
             output = model(data)
-            loss = F.nll_loss(output, target)
+            loss = criterion(output, target)
             loss_acc += loss.item() / batch_size
             loss.backward()
             optimizer.step()
@@ -45,7 +45,7 @@ def train(model, train_epoch, train_loader, local_rank):
             print(f"Train Epoch: {epoch} \tLoss: {loss_acc / len(train_loader)}")
 
 
-def test(model, test_loader, local_rank):
+def test(model, test_loader, local_rank, criterion):
     model.eval()
     test_loss = 0
     correct = 0
@@ -54,7 +54,7 @@ def test(model, test_loader, local_rank):
             data = data.to(local_rank)
             target = target.to(local_rank)
             output = model(data)
-            test_loss += F.nll_loss(output, target, size_average=False).item()
+            test_loss += criterion(output, target, size_average=False).item()
             pred = output.data.max(1, keepdim=True)[1]
             correct += pred.eq(target.data.view_as(pred)).sum()
     test_loss /= len(test_loader.dataset)
@@ -117,6 +117,7 @@ if __name__ == "__main__":
     model = Net()
     model = model.to(args.local_rank)
     model = DDP(model, device_ids=[args.local_rank])
-    optimizer = optim.SGD(model.parameters(), lr=learning_rate).to(args.local_rank)
-    train(model, 20, train_loader, args.local_rank)
-    test(model, test_loader, args.local_rank)
+    criterion = torch.nn.NLLLoss()
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+    train(model, 20, train_loader, args.local_rank, criterion)
+    test(model, test_loader, args.local_rank, criterion)
