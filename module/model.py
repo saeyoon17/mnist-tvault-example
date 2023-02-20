@@ -131,5 +131,5 @@ NUM_CLASSES = 10
 
 def resnet18(num_classes):
     """Constructs a ResNet-18 model."""
-    model = ResNet(block=BasicBlock, layers=[2, 2, 2, 2], num_classes=NUM_CLASSES, grayscale=GRAYSCALE)
+    model = ResNet(block=BasicBlock, layers=[2, 2, 2, 2], num_classes=NUM_CLASSES, grayscale=True)
     return model
