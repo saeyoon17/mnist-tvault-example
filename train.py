@@ -27,16 +27,15 @@ np.random.seed(seed)
 batch_size = 128
 learning_rate = 1e-3
 log_interval = 10
-device = "cuda"
 
 
-def train(model, train_epoch, train_loader):
+def train(model, train_epoch, train_loader, local_rank):
     model.train()
     loss_acc = 0
     for epoch in range(train_epoch):
         for batch_idx, (data, target) in enumerate(train_loader):
-            data = data.to(device)
-            target = target.to(device)
+            data = data.to(local_rank)
+            target = target.to(local_rank)
             optimizer.zero_grad()
             output = model(data)
             loss = F.nll_loss(output, target)
@@ -47,14 +46,14 @@ def train(model, train_epoch, train_loader):
             print(f"Train Epoch: {epoch} \tLoss: {loss_acc / len(train_loader)}")
 
 
-def test(model, test_loader):
+def test(model, test_loader, local_rank):
     model.eval()
     test_loss = 0
     correct = 0
     with torch.no_grad():
         for data, target in test_loader:
-            data = data.to(device)
-            target = target.to(device)
+            data = data.to(local_rank)
+            target = target.to(local_rank)
             output = model(data)
             test_loss += F.nll_loss(output, target, size_average=False).item()
             pred = output.data.max(1, keepdim=True)[1]
@@ -80,19 +79,10 @@ def init_for_distributed(args):
 
     rank = int(os.environ["RANK"])
     local_rank = int(os.environ["LOCAL_RANK"])
-    print(rank)
-    print(local_rank)
-    print(args.gpu_ids)
-
-    # os.environ["MASTER_ADDR"] = "127.0.0.1"
-    # os.environ["MASTER_PORT"] = "2224"
-    world_size = int(os.environ["WORLD_SIZE"])
 
     # initialize the process group
-    print("before init process group")
     torch.cuda.set_device(args.local_rank)
     dist.init_process_group("nccl", init_method="env://")
-    print("after init process group")
     if args.local_rank is not None:
         args.local_rank = local_rank
         print("Use GPU: {} for training".format(args.local_rank))
@@ -127,14 +117,9 @@ if __name__ == "__main__":
         batch_size=batch_size,
         sampler=test_sampler,
     )
-    print("debug-0")
     model = Net()
-    print(args.local_rank)
-    print("debug-1")
     model = model.to(args.local_rank)
-    print("debug-2")
     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank])
-    print("debug-3")
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-    train(model, 20, train_loader)
-    test(model, test_loader)
+    train(model, 20, train_loader, args.local_rank)
+    test(model, test_loader, args.local_rank)
