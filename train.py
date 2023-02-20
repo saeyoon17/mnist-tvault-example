@@ -86,7 +86,8 @@ def init_for_distributed(args):
 
     os.environ["MASTER_ADDR"] = "127.0.0.1"
     os.environ["MASTER_PORT"] = "29500"
-    world_size = len(args.gpu_ids) * 4
+    world_size = int(os.environ["WORLD_SIZE"])
+    print(world_size)
     # initialize the process group
     print("before init process group")
     dist.init_process_group("nccl", rank=local_rank, world_size=world_size)
