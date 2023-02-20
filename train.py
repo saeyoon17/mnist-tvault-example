@@ -90,7 +90,7 @@ def init_for_distributed(args):
 
     # initialize the process group
     print("before init process group")
-    # torch.cuda.set_device(args.local_rank)
+    torch.cuda.set_device(args.local_rank)
     dist.init_process_group("nccl", init_method="env://")
     print("after init process group")
     if args.local_rank is not None:
