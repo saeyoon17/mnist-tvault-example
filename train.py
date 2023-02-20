@@ -84,13 +84,13 @@ def init_for_distributed(args):
     print(local_rank)
     print(args.gpu_ids)
 
-    # os.environ["MASTER_ADDR"] = "127.0.0.1"
-    os.environ["MASTER_PORT"] = "2224"
+    os.environ["MASTER_ADDR"] = "127.0.0.1"
+    # os.environ["MASTER_PORT"] = "2224"
     world_size = int(os.environ["WORLD_SIZE"])
     print(world_size)
     # initialize the process group
     print("before init process group")
-    dist.init_process_group("nccl", rank=local_rank, world_size=world_size, master_port=2224)
+    dist.init_process_group("nccl", rank=local_rank, world_size=world_size)
     print("after init process group")
     if args.local_rank is not None:
         args.local_rank = local_rank
