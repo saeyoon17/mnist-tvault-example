@@ -54,7 +54,7 @@ def test(model, test_loader, local_rank, criterion):
             data = data.to(local_rank)
             target = target.to(local_rank)
             output = model(data)
-            test_loss += criterion(output, target, size_average=False).item()
+            test_loss += criterion(output, target).item()  # size avg?
             pred = output.data.max(1, keepdim=True)[1]
             correct += pred.eq(target.data.view_as(pred)).sum()
     test_loss /= len(test_loader.dataset)
