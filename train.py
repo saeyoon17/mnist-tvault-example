@@ -4,7 +4,6 @@
 import os
 import torch
 import torch.distributed as dist
-import torch.nn as nn
 import torch.optim as optim
 import torchvision
 import numpy as np
@@ -77,9 +76,7 @@ def get_args_parser():
 
 def init_for_distributed(args):
 
-    rank = int(os.environ["RANK"])
     local_rank = int(os.environ["LOCAL_RANK"])
-
     # initialize the process group
     torch.cuda.set_device(args.local_rank)
     dist.init_process_group("nccl", init_method="env://")
@@ -119,7 +116,7 @@ if __name__ == "__main__":
     )
     model = Net()
     model = model.to(args.local_rank)
-    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank])
-    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+    model = DDP(model, device_ids=[args.local_rank])
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate).to(args.local_rank)
     train(model, 20, train_loader, args.local_rank)
     test(model, test_loader, args.local_rank)
