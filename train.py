@@ -11,7 +11,7 @@ import torch.nn.functional as F
 
 from torch.nn.parallel import DistributedDataParallel as DDP
 
-from module import Net
+from module import Net, resnet18
 import argparse
 
 # seeding
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         test_dataset,
         batch_size=batch_size,
     )
-    model = Net()
+    model = resnet18(10)
     model = model.to(args.local_rank)
     model = DDP(model, device_ids=[args.local_rank])
     criterion = torch.nn.NLLLoss()
