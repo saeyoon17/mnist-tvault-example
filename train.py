@@ -88,7 +88,9 @@ def init_for_distributed(args):
     os.environ["MASTER_PORT"] = "29500"
     world_size = len(args.gpu_ids) * 4
     # initialize the process group
+    print("before init process group")
     dist.init_process_group("gloo", rank=local_rank, world_size=world_size)
+    print("after init process group")
     if args.local_rank is not None:
         args.local_rank = local_rank
         print("Use GPU: {} for training".format(args.local_rank))
