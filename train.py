@@ -90,6 +90,7 @@ def init_for_distributed(args):
     print(world_size)
     # initialize the process group
     print("before init process group")
+    print(torch.distributed.is_nccl_available())
     dist.init_process_group("nccl", rank=local_rank, world_size=world_size)
     print("after init process group")
     if args.local_rank is not None:
