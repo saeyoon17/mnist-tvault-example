@@ -67,6 +67,12 @@ def analyze_model(model, model_dir, torch_dir=None):
     print("\n\n")
     class_defs, function_defs = get_defs(model_dir)
     target_funcs = match_external_funcs(class_defs)
-    import ipdb
 
-    ipdb.set_trace()
+    filter_target_class = defaultdict(lambda: "")
+    filter_target_funcs = defaultdict(lambda: "")
+    for k, v in class_defs:
+        filter_target_class[k] = ast.unparse(v)
+    for k, v in function_defs:
+        if k.split(":")[-1] in target_funcs:
+            filter_target_funcs[k] = ast.unparse(v)
+    return filter_target_class, filter_target_funcs
