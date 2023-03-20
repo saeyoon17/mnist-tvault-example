@@ -8,7 +8,7 @@ def get_class_defs(model_dir):
     class_defs = []
     for filename in glob.iglob(model_dir + "**/*.py", recursive=True):
         with open(filename, "r") as f:
-            file_ast = ast.parse(f)
+            file_ast = ast.parse(f.read())
         import ipdb
 
         ipdb.set_trace()
