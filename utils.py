@@ -7,7 +7,8 @@ def get_class_defs(model_dir):
     # root_dir needs a trailing slash (i.e. /root/dir/)
     class_defs = []
     for filename in glob.iglob(model_dir + "**/*.py", recursive=True):
-        file_ast = ast.parse()
+        with open(filename, "r") as f:
+            file_ast = ast.parse(f)
         import ipdb
 
         ipdb.set_trace()
