@@ -131,6 +131,7 @@ if __name__ == "__main__":
         batch_size=batch_size,
     )
     model = resnet18(10)
+    analyze_model(model.__str__)
     import ipdb
 
     ipdb.set_trace()

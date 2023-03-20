@@ -3,7 +3,6 @@ import ast
 
 
 def analyze_model(model):
-    model = model.__str__
     target_modules = []
     for line in model:
         if "(" in line:
