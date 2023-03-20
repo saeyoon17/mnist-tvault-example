@@ -76,6 +76,8 @@ def get_args_parser():
     parser.add_argument("--gpu_ids", nargs="+", default=["0", "1", "2", "3"])
     parser.add_argument("--world_size", type=int, default=4)
     parser.add_argument("--local_rank", type=int, default=0)
+    # ?? debug for python3.9 trial
+    parser.add_argument("--local-rank", type=int, default=0)
     return parser
 
 
