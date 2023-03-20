@@ -77,6 +77,7 @@ def get_args_parser():
     parser.add_argument("--world_size", type=int, default=4)
     parser.add_argument("--local_rank", type=int, default=0)
     # ?? debug for python3.9 trial
+    # why passed on using local-rank ..?
     parser.add_argument("--local-rank", type=int, default=0)
     return parser
 
