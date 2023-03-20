@@ -63,16 +63,14 @@ def analyze_model(model, model_dir, torch_dir=None):
                 # submodules
                 target_module = line.split("(")[1].split(" ")[-1]
             target_modules.add(target_module)
-    print(target_modules)
-    print("\n\n")
     class_defs, function_defs = get_defs(model_dir)
     target_funcs = match_external_funcs(class_defs)
 
     filter_target_class = defaultdict(lambda: "")
     filter_target_funcs = defaultdict(lambda: "")
-    for k, v in class_defs:
+    for k, v in class_defs.items():
         filter_target_class[k] = ast.unparse(v)
-    for k, v in function_defs:
+    for k, v in function_defs.items():
         if k.split(":")[-1] in target_funcs:
             filter_target_funcs[k] = ast.unparse(v)
     return filter_target_class, filter_target_funcs
