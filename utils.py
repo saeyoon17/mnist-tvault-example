@@ -30,12 +30,9 @@ def match_external_funcs(class_defs):
             try:
                 # if the function is __init__,
                 if body.name == "__init__":
-                    import ipdb
-
-                    ipdb.set_trace()
                     init_body = body
                     # for each stmt in init_body,
-                    for stmt in init_body:
+                    for stmt in init_body.body:
                         # if the statement is assign, and its value is function call, and is external
                         if (
                             type(stmt) == ast.Assign
