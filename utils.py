@@ -5,8 +5,8 @@ import ast
 def analyze_model(model):
     model = model.__str__()
     target_modules = []
-    for line in model:
-        if "(" in line.split("\n"):
+    for line in model.split("\n"):
+        if "(" in line:
             if "\t" not in line:
                 # model classname
                 target_module = line.split("(")[0]
