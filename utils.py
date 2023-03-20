@@ -3,7 +3,7 @@ import ast
 
 
 def analyze_model(model):
-    model = model.__str__
+    model = model.__str__()
     import ipdb
 
     ipdb.set_trace()
