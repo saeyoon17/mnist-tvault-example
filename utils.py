@@ -7,13 +7,10 @@ def analyze_model(model):
     target_modules = []
     for line in model.split("\n"):
         if "(" in line:
-            if "\t" not in line:
+            if line == line.strip():
                 # model classname
                 target_module = line.split("(")[0]
             else:
-                import ipdb
-
-                ipdb.set_trace()
                 # submodules
                 target_module = line.split("(")[1].split(" ")[-1]
             target_modules.append(target_module)
