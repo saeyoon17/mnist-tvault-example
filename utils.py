@@ -21,7 +21,7 @@ def get_defs(model_dir):
 
 def match_external_funcs(class_defs):
     target_funcs = []
-    for class_def in class_defs:
+    for class_def in class_defs.values():
         # for each body in class definitions,
         import ipdb
 
