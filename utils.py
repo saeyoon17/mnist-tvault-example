@@ -48,7 +48,7 @@ def match_external_funcs(class_defs):
             # parsing errors will happen by default
             except:
                 pass
-    return target_funcs
+    return list(set(target_funcs))
 
 
 def analyze_model(model, model_dir, torch_dir=None):
