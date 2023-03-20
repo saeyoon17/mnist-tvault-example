@@ -3,10 +3,14 @@ import ast
 import glob
 
 
-def get_module_defs(model_dir):
+def get_class_defs(model_dir):
     # root_dir needs a trailing slash (i.e. /root/dir/)
+    class_defs = []
     for filename in glob.iglob(model_dir + "**/*.py", recursive=True):
-        print(filename)
+        file_ast = ast.parse()
+        import ipdb
+
+        ipdb.set_trace()
 
 
 def analyze_model(model, model_dir, torch_dir=None):
@@ -23,4 +27,4 @@ def analyze_model(model, model_dir, torch_dir=None):
             target_modules.add(target_module)
     print(target_modules)
     print("\n\n")
-    get_module_defs(model_dir)
+    get_class_defs(model_dir)
