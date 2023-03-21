@@ -143,9 +143,9 @@ if __name__ == "__main__":
     sha = repo.head.object.hexsha
     with open(f"logs/model_str_{sha}.txt", "w") as f:
         f.write(model.__str__())
-    with open(f"logs/class_def_{sha}.txt", "w") as f:
+    with open(f"logs/class_def_{sha}.txt", "wb") as f:
         pickle.dump(dict(class_log), f)
-    with open(f"logs/func_def_{sha}.txt", "w") as f:
+    with open(f"logs/func_def_{sha}.txt", "wb") as f:
         pickle.dump(dict(function_log), f)
 
     # import ipdb
