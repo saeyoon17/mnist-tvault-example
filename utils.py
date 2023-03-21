@@ -1,6 +1,8 @@
 import os
 import ast
 import glob
+import pickle
+import difflib
 from collections import defaultdict
 
 
@@ -74,3 +76,23 @@ def analyze_model(model, model_dir, torch_dir=None):
         if k.split(":")[-1] in target_funcs:
             filter_target_funcs[k] = ast.unparse(v)
     return filter_target_class, filter_target_funcs
+
+
+def get_model_diff(sha1, sha2):
+    with open(f"logs/model_str_{sha1}.txt", "w") as f:
+        prev_model = f.readlines()
+    with open(f"logs/class_def_{sha1}.pkl", "wb") as f:
+        prev_class_def = pickle.load(f)
+    with open(f"logs/func_def_{sha1}.pkl", "wb") as f:
+        prev_func_def = pickle.load(f)
+
+    with open(f"logs/model_str_{sha2}.txt", "w") as f:
+        cur_model = f.readlines()
+    with open(f"logs/class_def_{sha2}.pkl", "wb") as f:
+        cur_class_def = pickle.load(f)
+    with open(f"logs/func_def_{sha2}.pkl", "wb") as f:
+        cur_func_def = pickle.load(f)
+
+    # 1. get model diff using string
+    print("===== MACRO MODEL DIFF =====")
+    print(difflib.ndiff(prev_model, cur_model))
