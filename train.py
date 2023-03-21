@@ -9,7 +9,7 @@ import torch.distributed as dist
 import torch.optim as optim
 import torchvision
 import numpy as np
-from utils import analyze_model
+from utils import analyze_model, get_model_diff
 import torch.nn.functional as F
 
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -81,6 +81,8 @@ def get_args_parser():
     # ?? debug for python3.9 trial
     # why passed on using local-rank ..?
     parser.add_argument("--local-rank", type=int, default=0)
+    parser.add_argument("--sha1", type=str, default="")
+    parser.add_argument("--sha2", type=str, default="")
     return parser
 
 
@@ -136,17 +138,22 @@ if __name__ == "__main__":
         batch_size=batch_size,
     )
     model = resnet18(10)
-    class_log, function_log = analyze_model(model, "./")
+    if args.sha1 != "":
+        print(f"get model diff between commit {args.sha1} and {args.sha2}")
+        get_model_diff(args.sha1, args.sha2)
+    else:
+        print("log current model")
+        class_log, function_log = analyze_model(model, "./")
 
-    # get git hash
-    repo = git.Repo(search_parent_directories=True)
-    sha = repo.head.object.hexsha
-    with open(f"logs/model_str_{sha}.txt", "w") as f:
-        f.write(model.__str__())
-    with open(f"logs/class_def_{sha}.pkl", "wb") as f:
-        pickle.dump(dict(class_log), f)
-    with open(f"logs/func_def_{sha}.pkl", "wb") as f:
-        pickle.dump(dict(function_log), f)
+        # get git hash
+        repo = git.Repo(search_parent_directories=True)
+        sha = repo.head.object.hexsha
+        with open(f"logs/model_str_{sha}.txt", "w") as f:
+            f.write(model.__str__())
+        with open(f"logs/class_def_{sha}.pkl", "wb") as f:
+            pickle.dump(dict(class_log), f)
+        with open(f"logs/func_def_{sha}.pkl", "wb") as f:
+            pickle.dump(dict(function_log), f)
 
     # import ipdb
 
