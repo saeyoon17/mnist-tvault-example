@@ -109,7 +109,8 @@ def get_model_diff(sha1, sha2):
 
                 ipdb.set_trace()
                 print(f"===== CHANGE IN MODULE: {p_module} =====")
-                print("".join(diff))
+                filter_class_diff = [l for l in diff if not l.startswith("? ")]
+                print("".join(filter_class_diff))
         else:
             print(f"===== MODULE REMOVED: {p_module} =====")
     for c_module, c_source in cur_class_def.items():
