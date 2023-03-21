@@ -99,7 +99,7 @@ def get_model_diff(sha1, sha2):
     filter_model_diff = [l for l in model_diff if not l.startswith("? ")]
     print("".join(filter_model_diff))
 
-    # 2. Check forward function of each module
+    # 2. Check module definition between modules
     for p_module, p_source in prev_class_def.items():
         if p_module in cur_class_def.keys():
             class_diff = [
@@ -115,4 +115,22 @@ def get_model_diff(sha1, sha2):
     for c_module, c_source in cur_class_def.items():
         if c_module not in prev_class_def.keys():
             print(f"===== MODULE ADDED: {p_module} =====")
+            print(c_source)
+
+    # 3. Check external function diff
+    for p_func, p_source in prev_func_def.items():
+        if p_func in cur_func_def.keys():
+            func_diff = [
+                e for e in difflib.ndiff(p_source.split("\n"), cur_class_def[p_func].split("\n"))
+            ]  # generator requires this wrapping
+            changes = [l for l in func_diff if l.startswith("+ ") or l.startswith("- ")]
+            filter_func_diff = [l for l in func_diff if not l.startswith("? ")]
+            if len(changes) > 0:
+                print(f"===== CHANGE IN MODULE: {p_func} =====")
+                print("\n".join(filter_func_diff))
+        else:
+            print(f"===== MODULE REMOVED: {p_func} =====")
+    for c_func, c_source in cur_func_def.items():
+        if c_func not in prev_func_def.keys():
+            print(f"===== MODULE ADDED: {p_func} =====")
             print(c_source)
