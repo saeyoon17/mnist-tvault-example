@@ -100,4 +100,4 @@ def get_model_diff(sha1, sha2):
     print("===== MACRO MODEL DIFF =====")
     model_diff = difflib.ndiff(prev_model, cur_model)
     for l in model_diff:
-        print(l)
+        print(l, end="")
