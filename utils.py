@@ -71,7 +71,8 @@ def analyze_model(model, model_dir, torch_dir=None):
     filter_target_class = defaultdict(lambda: "")
     filter_target_funcs = defaultdict(lambda: "")
     for k, v in class_defs.items():
-        filter_target_class[k] = ast.unparse(v)
+        if k.split(":")[-1] in target_modules:
+            filter_target_class[k] = ast.unparse(v)
     for k, v in function_defs.items():
         if k.split(":")[-1] in target_funcs:
             filter_target_funcs[k] = ast.unparse(v)
