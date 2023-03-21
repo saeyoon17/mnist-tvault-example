@@ -96,7 +96,8 @@ def get_model_diff(sha1, sha2):
     # 1. get model diff using string
     print("===== MACRO MODEL DIFF =====")
     model_diff = difflib.ndiff(prev_model, cur_model)
-    print("".join(model_diff))
+    filter_model_diff = [l for l in model_diff if not l.startswith("? ")]
+    print("".join(filter_model_diff))
 
     # 2. Check forward function of each module
     for p_module, p_source in prev_class_def.items():
@@ -104,6 +105,9 @@ def get_model_diff(sha1, sha2):
             diff = difflib.ndiff(p_source, cur_class_def[p_module])
             changes = [l for l in diff if l.startswith("+ ") or l.startswith("- ")]
             if len(changes) > 0:
+                import ipdb
+
+                ipdb.set_trace()
                 print(f"===== CHANGE IN MODULE: {p_module} =====")
                 print("".join(diff))
         else:
