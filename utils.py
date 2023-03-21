@@ -105,7 +105,7 @@ def get_model_diff(sha1, sha2):
             import ipdb
 
             ipdb.set_trace()
-            diff = difflib.ndiff(p_source, cur_class_def[p_module])
+            diff = difflib.ndiff(p_source.split("\n"), cur_class_def[p_module].split("\n"))
             changes = [l for l in diff if l.startswith("+ ") or l.startswith("- ")]
             if len(changes) > 0:
                 print(f"===== CHANGE IN MODULE: {p_module} =====")
