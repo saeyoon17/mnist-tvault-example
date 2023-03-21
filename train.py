@@ -2,7 +2,9 @@
 # Source: https://nextjournal.com/gkoehler/pytorch-mnist
 # Import necessary files
 import os
+import git
 import torch
+import pickle
 import torch.distributed as dist
 import torch.optim as optim
 import torchvision
@@ -135,13 +137,24 @@ if __name__ == "__main__":
     )
     model = resnet18(10)
     class_log, function_log = analyze_model(model, "./")
-    import ipdb
 
-    ipdb.set_trace()
-    model = model.to(args.local_rank)
-    model = DDP(model, device_ids=[args.local_rank])
-    criterion = torch.nn.NLLLoss()
-    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-    train(model, 20, train_loader, args.local_rank, criterion)
-    if args.local_rank == 0:
-        test(model, test_loader, args.local_rank, criterion)
+    # get git hash
+    repo = git.Repo(search_parent_directories=True)
+    sha = repo.head.object.hexsha
+    with open(f"model_str_{sha}.txt", "w") as f:
+        f.write(model.__str__())
+    with open(f"class_def_{sha}.txt", "w") as f:
+        pickle.dump(dict(class_log), f)
+    with open(f"func_def_{sha}.txt", "w") as f:
+        pickle.dump(dict(function_log), f)
+
+    # import ipdb
+
+    # ipdb.set_trace()
+    # model = model.to(args.local_rank)
+    # model = DDP(model, device_ids=[args.local_rank])
+    # criterion = torch.nn.NLLLoss()
+    # optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+    # train(model, 20, train_loader, args.local_rank, criterion)
+    # if args.local_rank == 0:
+    #     test(model, test_loader, args.local_rank, criterion)
