@@ -126,11 +126,11 @@ def get_model_diff(sha1, sha2):
             changes = [l for l in func_diff if l.startswith("+ ") or l.startswith("- ")]
             filter_func_diff = [l for l in func_diff if not l.startswith("? ")]
             if len(changes) > 0:
-                print(f"===== CHANGE IN MODULE: {p_func} =====")
+                print(f"===== CHANGE IN FUNCTION: {p_func} =====")
                 print("\n".join(filter_func_diff))
         else:
-            print(f"===== MODULE REMOVED: {p_func} =====")
+            print(f"===== FUNCTION REMOVED: {p_func} =====")
     for c_func, c_source in cur_func_def.items():
         if c_func not in prev_func_def.keys():
-            print(f"===== MODULE ADDED: {p_func} =====")
+            print(f"===== FUNCTION ADDED: {p_func} =====")
             print(c_source)
