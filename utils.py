@@ -66,13 +66,22 @@ def analyze_model(model, model_dir, torch_dir=None):
                 target_module = line.split("(")[1].split(" ")[-1]
             target_modules.add(target_module)
     class_defs, function_defs = get_defs(model_dir)
-    target_funcs = match_external_funcs(class_defs)
 
-    filter_target_class = defaultdict(lambda: "")
-    filter_target_funcs = defaultdict(lambda: "")
+    # filter class defs
+    filter_class_defs = defaultdict(lambda: "")
     for k, v in class_defs.items():
         if k.split(":")[-1] in target_modules:
+            filter_class_defs[k] = v
+    # find functions that we only want to track
+    target_funcs = match_external_funcs(filter_class_defs)
+
+    # unparse
+    filter_target_class = defaultdict(lambda: "")
+    for k, v in filter_class_defs.items():
+        if k.split(":")[-1] in target_modules:
             filter_target_class[k] = ast.unparse(v)
+
+    filter_target_funcs = defaultdict(lambda: "")
     for k, v in function_defs.items():
         if k.split(":")[-1] in target_funcs:
             filter_target_funcs[k] = ast.unparse(v)
