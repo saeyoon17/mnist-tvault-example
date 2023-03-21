@@ -79,18 +79,18 @@ def analyze_model(model, model_dir, torch_dir=None):
 
 
 def get_model_diff(sha1, sha2):
-    with open(f"logs/model_str_{sha1}.txt", "w") as f:
+    with open(f"logs/model_str_{sha1}.txt", "r") as f:
         prev_model = f.readlines()
-    with open(f"logs/class_def_{sha1}.pkl", "wb") as f:
+    with open(f"logs/class_def_{sha1}.pkl", "rb") as f:
         prev_class_def = pickle.load(f)
-    with open(f"logs/func_def_{sha1}.pkl", "wb") as f:
+    with open(f"logs/func_def_{sha1}.pkl", "rb") as f:
         prev_func_def = pickle.load(f)
 
-    with open(f"logs/model_str_{sha2}.txt", "w") as f:
+    with open(f"logs/model_str_{sha2}.txt", "r") as f:
         cur_model = f.readlines()
-    with open(f"logs/class_def_{sha2}.pkl", "wb") as f:
+    with open(f"logs/class_def_{sha2}.pkl", "rb") as f:
         cur_class_def = pickle.load(f)
-    with open(f"logs/func_def_{sha2}.pkl", "wb") as f:
+    with open(f"logs/func_def_{sha2}.pkl", "rb") as f:
         cur_func_def = pickle.load(f)
 
     # 1. get model diff using string
