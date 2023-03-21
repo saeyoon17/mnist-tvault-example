@@ -102,9 +102,6 @@ def get_model_diff(sha1, sha2):
     # 2. Check forward function of each module
     for p_module, p_source in prev_class_def.items():
         if p_module in cur_class_def.keys():
-            import ipdb
-
-            ipdb.set_trace()
             diff = difflib.ndiff(p_source.split("\n"), cur_class_def[p_module].split("\n"))
             changes = [l for l in diff if l.startswith("+ ") or l.startswith("- ")]
             if len(changes) > 0:
