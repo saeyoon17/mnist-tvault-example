@@ -121,7 +121,7 @@ def get_model_diff(sha1, sha2):
     for p_func, p_source in prev_func_def.items():
         if p_func in cur_func_def.keys():
             func_diff = [
-                e for e in difflib.ndiff(p_source.split("\n"), cur_class_def[p_func].split("\n"))
+                e for e in difflib.ndiff(p_source.split("\n"), cur_func_def[p_func].split("\n"))
             ]  # generator requires this wrapping
             changes = [l for l in func_diff if l.startswith("+ ") or l.startswith("- ")]
             filter_func_diff = [l for l in func_diff if not l.startswith("? ")]
