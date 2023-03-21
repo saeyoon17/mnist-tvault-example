@@ -94,10 +94,12 @@ def get_model_diff(sha1, sha2):
         cur_func_def = pickle.load(f)
 
     # 1. get model diff using string
+    print("===== MACRO MODEL DIFF =====")
+    model_diff = difflib.ndiff(prev_model, cur_model)
+    # for l in model_diff:
+    #     print(l, end="")
+
+    # 2. Check forward function of each module
     import ipdb
 
     ipdb.set_trace()
-    print("===== MACRO MODEL DIFF =====")
-    model_diff = difflib.ndiff(prev_model, cur_model)
-    for l in model_diff:
-        print(l, end="")
