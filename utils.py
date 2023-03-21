@@ -109,7 +109,7 @@ def get_model_diff(sha1, sha2):
             filter_class_diff = [l for l in class_diff if not l.startswith("? ")]
             if len(changes) > 0:
                 print(f"===== CHANGE IN MODULE: {p_module} =====")
-                print("".join(filter_class_diff))
+                print("\n".join(filter_class_diff))
         else:
             print(f"===== MODULE REMOVED: {p_module} =====")
     for c_module, c_source in cur_class_def.items():
