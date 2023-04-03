@@ -3,6 +3,7 @@ import ast
 import glob
 import pickle
 import difflib
+import astunparse
 from collections import defaultdict
 
 
@@ -76,12 +77,13 @@ def analyze_model(model, model_dir, torch_dir=None):
     filter_target_class = defaultdict(lambda: "")
     for k, v in filter_class_defs.items():
         if k.split(":")[-1] in target_modules:
-            filter_target_class[k] = ast.unparse(v)
+            # filter_target_class[k] = ast.unparse(v)
+            filter_target_class[k] = astunparse.unparse(v)
 
     filter_target_funcs = defaultdict(lambda: "")
     for k, v in function_defs.items():
         if k.split(":")[-1] in target_funcs:
-            filter_target_funcs[k] = ast.unparse(v)
+            filter_target_funcs[k] = astunparse.unparse(v)
     return filter_target_class, filter_target_funcs
 
 
