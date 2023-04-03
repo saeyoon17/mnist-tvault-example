@@ -339,12 +339,12 @@ if __name__ == "__main__":
         print("log current model")
 
         # tvault debugging session
-        tvault = TorchVault("./logs", "./")
-        tvault.diff("c93198d", "b86c619")
+        # tvault = TorchVault("./logs", "./")
+        # tvault.diff("c93198d", "b86c619")
 
-        # import tvault
+        import tvault
 
-        # tvault.log(model, "./logs", "./")
+        tvault.log(model, "./logs", "./")
         # class_log, function_log = analyze_model(model, "./")
 
         # # get git hash
