@@ -135,10 +135,10 @@ class TorchVault:
         diff_dict = dict()
 
         # 1. get model diff using string
-        model_diff = [e for e in difflib.ndiff(prev_model["model"], cur_model["model"])]
-        import ipdb
-
-        ipdb.set_trace()
+        model_diff = [
+            e
+            for e in difflib.ndiff(prev_model["model"].split("\n"), cur_model["model"].split("\n"))
+        ]
         filter_model_diff = [l for l in model_diff if not l.startswith("? ")]
         model_diff = "".join(filter_model_diff)
         diff_dict["model"] = model_diff
