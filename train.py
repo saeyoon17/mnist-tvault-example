@@ -136,6 +136,9 @@ class TorchVault:
 
         # 1. get model diff using string
         model_diff = [e for e in difflib.ndiff(prev_model["model"], cur_model["model"])]
+        import ipdb
+
+        ipdb.set_trace()
         filter_model_diff = [l for l in model_diff if not l.startswith("? ")]
         model_diff = "".join(filter_model_diff)
         diff_dict["model"] = model_diff
@@ -151,9 +154,6 @@ class TorchVault:
                         p_source.split("\n"), cur_model["src"][p_module].split("\n")
                     )
                 ]  # generator requires this wrapping
-                import ipdb
-
-                ipdb.set_trace()
                 changes = [l for l in class_diff if l.startswith("+ ") or l.startswith("- ")]
                 filter_class_diff = [l for l in class_diff if not l.startswith("? ")]
                 if len(changes) > 0:
