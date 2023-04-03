@@ -63,7 +63,7 @@ class BasicBlock(nn.Module):
 
 class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes, grayscale):
-        self.inplanes = 64
+        self.inplanes = 1129
         if grayscale:
             in_dim = 1
         else:
