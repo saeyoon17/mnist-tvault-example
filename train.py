@@ -139,25 +139,27 @@ if __name__ == "__main__":
         test_dataset,
         batch_size=batch_size,
     )
-    model = resnet18(10)
-    if args.sha1 != "":
-        print(f"get model diff between commit {args.sha1} and {args.sha2}")
-        get_model_diff(args.sha1, args.sha2)
-    else:
-        print("log current model")
 
-        # tvault debugging session
-        # tvault = TorchVault("./logs", "./")
-        # tvault.diff("c93198d", "b86c619")
+    for learning_rate in [0.01, 0.001, 0.0001, 0.00001, 0.000001]:
+        model = resnet18(10)
+        if args.sha1 != "":
+            print(f"get model diff between commit {args.sha1} and {args.sha2}")
+            get_model_diff(args.sha1, args.sha2)
+        else:
+            print("log current model")
 
-        model = model.to(args.local_rank)
-        model = DDP(model, device_ids=[args.local_rank])
-        criterion = torch.nn.NLLLoss()
-        optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-        train(model, 2, train_loader, args.local_rank, criterion)
-        if args.local_rank == 0:
-            acc = test(model, test_loader, args.local_rank, criterion)
-        tvault.log(model)
-        tvault.log_optimizer(optimizer)
-        tvault.add_tag("default")
-        tvault.add_result(acc)
+            # tvault debugging session
+            # tvault = TorchVault("./logs", "./")
+            # tvault.diff("c93198d", "b86c619")
+
+            model = model.to(args.local_rank)
+            model = DDP(model, device_ids=[args.local_rank])
+            criterion = torch.nn.NLLLoss()
+            optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+            train(model, 5, train_loader, args.local_rank, criterion)
+            if args.local_rank == 0:
+                acc = test(model, test_loader, args.local_rank, criterion)
+            tvault.log(model)
+            tvault.log_optimizer(optimizer)
+            tvault.add_tag(f"lr_{learning_rate}")
+            tvault.add_result(acc)
