@@ -27,7 +27,7 @@ torch.backends.cudnn.enabled = False
 np.random.seed(seed)
 
 # configurations
-batch_size = 128
+batch_size = 1024
 learning_rate = 1e-3
 log_interval = 10
 
@@ -39,12 +39,12 @@ def train(model, train_epoch, train_loader, local_rank, criterion):
         for batch_idx, (data, target) in enumerate(train_loader):
             data = data.to(local_rank)
             target = target.to(local_rank)
-            # optimizer.zero_grad()
+            optimizer.zero_grad()
             output = model(data)
             loss = criterion(output, target)
             loss_acc += loss.item() / batch_size
             loss.backward()
-            # optimizer.step()
+            optimizer.step()
         if epoch % log_interval == 0:
             print(f"Train Epoch: {epoch} \tLoss: {loss_acc / len(train_loader)}")
 
