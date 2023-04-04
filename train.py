@@ -4,6 +4,7 @@
 import os
 import git
 import torch
+import tvault
 import pickle
 import torch.distributed as dist
 import torch.optim as optim
@@ -66,6 +67,7 @@ def test(model, test_loader, local_rank, criterion):
             test_loss, correct, len(test_loader.dataset), 100.0 * correct / len(test_loader.dataset)
         )
     )
+    return 100.0 * correct / len(test_loader.dataset)
 
 
 def get_args_parser():
@@ -148,18 +150,14 @@ if __name__ == "__main__":
         # tvault = TorchVault("./logs", "./")
         # tvault.diff("c93198d", "b86c619")
 
-        import tvault
-
+        model = model.to(args.local_rank)
+        model = DDP(model, device_ids=[args.local_rank])
+        criterion = torch.nn.NLLLoss()
+        optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+        train(model, 20, train_loader, args.local_rank, criterion)
+        if args.local_rank == 0:
+            acc = test(model, test_loader, args.local_rank, criterion)
         tvault.log(model, "./logs", "./")
-        class_log, function_log = analyze_model(model, "./")
-
-        # model = model.to(args.local_rank)
-        # model = DDP(model, device_ids=[args.local_rank])
-        # criterion = torch.nn.NLLLoss()
-        # optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-        # import ipdb
-
-        # ipdb.set_trace()
-        # train(model, 20, train_loader, args.local_rank, criterion)
-        # if args.local_rank == 0:
-        #     test(model, test_loader, args.local_rank, criterion)
+        tvault.log_optimizer(optimizer)
+        tvault.add_tag("default")
+        tvault.add_result(acc)
