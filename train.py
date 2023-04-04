@@ -29,7 +29,7 @@ np.random.seed(seed)
 # configurations
 batch_size = 4096
 learning_rate = 1e-3
-log_interval = 10
+log_interval = 1
 
 
 def train(model, train_epoch, train_loader, local_rank, criterion):
@@ -154,7 +154,7 @@ if __name__ == "__main__":
         model = DDP(model, device_ids=[args.local_rank])
         criterion = torch.nn.NLLLoss()
         optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-        train(model, 20, train_loader, args.local_rank, criterion)
+        train(model, 5, train_loader, args.local_rank, criterion)
         if args.local_rank == 0:
             acc = test(model, test_loader, args.local_rank, criterion)
         tvault.log(model)
