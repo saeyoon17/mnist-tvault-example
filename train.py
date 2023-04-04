@@ -27,7 +27,7 @@ torch.backends.cudnn.enabled = False
 np.random.seed(seed)
 
 # configurations
-batch_size = 1024
+batch_size = 4096
 learning_rate = 1e-3
 log_interval = 10
 
