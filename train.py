@@ -157,7 +157,7 @@ if __name__ == "__main__":
         train(model, 20, train_loader, args.local_rank, criterion)
         if args.local_rank == 0:
             acc = test(model, test_loader, args.local_rank, criterion)
-        tvault.log(model, "./logs", "./")
+        tvault.log(model)
         tvault.log_optimizer(optimizer)
         tvault.add_tag("default")
         tvault.add_result(acc)
