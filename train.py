@@ -152,3 +152,14 @@ if __name__ == "__main__":
 
         tvault.log(model, "./logs", "./")
         class_log, function_log = analyze_model(model, "./")
+
+        model = model.to(args.local_rank)
+        model = DDP(model, device_ids=[args.local_rank])
+        criterion = torch.nn.NLLLoss()
+        optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+        import ipdb
+
+        ipdb.set_trace()
+        train(model, 20, train_loader, args.local_rank, criterion)
+        if args.local_rank == 0:
+            test(model, test_loader, args.local_rank, criterion)
