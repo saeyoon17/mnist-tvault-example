@@ -148,10 +148,6 @@ if __name__ == "__main__":
         else:
             print(f"start training for lr {learning_rate}")
 
-            # tvault debugging session
-            # tvault = TorchVault("./logs", "./")
-            # tvault.diff("c93198d", "b86c619")
-
             model = model.to(args.local_rank)
             model = DDP(model, device_ids=[args.local_rank])
             criterion = torch.nn.NLLLoss()
