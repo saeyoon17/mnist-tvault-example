@@ -140,8 +140,8 @@ if __name__ == "__main__":
         batch_size=batch_size,
     )
 
-    # for learning_rate in [0.01, 0.001, 0.0001, 0.00001, 0.000001]:
-    for learning_rate in [0.01, 0.001]:
+    for learning_rate in [0.01, 0.001, 0.0001, 0.00001, 0.000001]:
+        # for learning_rate in [0.01, 0.001]:
         model = resnet18(10)
         if args.sha1 != "":
             print(f"get model diff between commit {args.sha1} and {args.sha2}")
@@ -153,7 +153,7 @@ if __name__ == "__main__":
             model = DDP(model, device_ids=[args.local_rank])
             criterion = torch.nn.NLLLoss()
             optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-            train(model, 2, train_loader, args.local_rank, criterion)
+            train(model, 5, train_loader, args.local_rank, criterion)
             if args.local_rank == 0:
                 acc = test(model, test_loader, args.local_rank, criterion)
             tvault.log(model)
