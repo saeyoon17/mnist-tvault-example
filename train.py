@@ -146,7 +146,7 @@ if __name__ == "__main__":
             print(f"get model diff between commit {args.sha1} and {args.sha2}")
             get_model_diff(args.sha1, args.sha2)
         else:
-            print("log current model")
+            print(f"start training for lr {learning_rate}")
 
             # tvault debugging session
             # tvault = TorchVault("./logs", "./")
