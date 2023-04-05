@@ -140,7 +140,8 @@ if __name__ == "__main__":
         batch_size=batch_size,
     )
 
-    for learning_rate in [0.01, 0.001, 0.0001, 0.00001, 0.000001]:
+    # for learning_rate in [0.01, 0.001, 0.0001, 0.00001, 0.000001]:
+    for learning_rate in [0.01, 0.001]:
         model = resnet18(10)
         if args.sha1 != "":
             print(f"get model diff between commit {args.sha1} and {args.sha2}")
