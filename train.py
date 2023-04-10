@@ -158,5 +158,5 @@ if __name__ == "__main__":
                 acc = test(model, test_loader, args.local_rank, criterion)
             tvault.log(model)
             tvault.log_optimizer(optimizer)
-            tvault.add_tag(f"lr_{learning_rate}")
+            tvault.add_tag(f"3l_lr_{learning_rate}")
             tvault.add_result(acc.item())
