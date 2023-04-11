@@ -2,20 +2,17 @@
 # Source: https://nextjournal.com/gkoehler/pytorch-mnist
 # Import necessary files
 import os
-import git
 import torch
 import tvault
-import pickle
 import torch.distributed as dist
 import torch.optim as optim
 import torchvision
 import numpy as np
-from utils import analyze_model, get_model_diff
 import torch.nn.functional as F
 
 from torch.nn.parallel import DistributedDataParallel as DDP
 
-from module import Net, resnet18
+from module import resnet18
 import argparse
 
 # seeding
@@ -80,11 +77,7 @@ def get_args_parser():
     parser.add_argument("--gpu_ids", nargs="+", default=["0", "1", "2", "3"])
     parser.add_argument("--world_size", type=int, default=4)
     parser.add_argument("--local_rank", type=int, default=0)
-    # ?? debug for python3.9 trial
-    # why passed on using local-rank ..?
     parser.add_argument("--local-rank", type=int, default=0)
-    parser.add_argument("--sha1", type=str, default="")
-    parser.add_argument("--sha2", type=str, default="")
     return parser
 
 
@@ -143,19 +136,15 @@ if __name__ == "__main__":
     for learning_rate in [0.01, 0.001, 0.0001, 0.00001, 0.000001]:
         # for learning_rate in [0.01, 0.001]:
         model = resnet18(10)
-        if args.sha1 != "":
-            print(f"get model diff between commit {args.sha1} and {args.sha2}")
-            get_model_diff(args.sha1, args.sha2)
-        else:
-            print(f"start training for lr {learning_rate}")
+        print(f"start training for lr {learning_rate}")
 
-            model = model.to(args.local_rank)
-            model = DDP(model, device_ids=[args.local_rank])
-            criterion = torch.nn.NLLLoss()
-            optimizer = optim.SGD(model.parameters(), lr=learning_rate)
-            train(model, 5, train_loader, args.local_rank, criterion)
-            if args.local_rank == 0:
-                acc = test(model, test_loader, args.local_rank, criterion)
-            tvault.log_all(
-                model, tag=f"resnet_upscale_{learning_rate}", result=acc.item(), optimizer=optimizer
-            )
+        model = model.to(args.local_rank)
+        model = DDP(model, device_ids=[args.local_rank])
+        criterion = torch.nn.NLLLoss()
+        optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+        train(model, 5, train_loader, args.local_rank, criterion)
+        if args.local_rank == 0:
+            acc = test(model, test_loader, args.local_rank, criterion)
+        tvault.log_all(
+            model, tag=f"resnet_upscale_{learning_rate}", result=acc.item(), optimizer=optimizer
+        )
