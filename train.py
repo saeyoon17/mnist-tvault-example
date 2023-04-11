@@ -156,7 +156,6 @@ if __name__ == "__main__":
             train(model, 5, train_loader, args.local_rank, criterion)
             if args.local_rank == 0:
                 acc = test(model, test_loader, args.local_rank, criterion)
-            tvault.log(model)
-            tvault.log_optimizer(optimizer)
-            tvault.add_tag(f"upscale_3l_lr_{learning_rate}")
-            tvault.add_result(acc.item())
+            tvault.log_all(
+                model, tag=f"resnet_upscale_{learning_rate}", result=acc.item(), optimizer=optimizer
+            )
