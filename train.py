@@ -145,6 +145,5 @@ if __name__ == "__main__":
         train(model, 5, train_loader, args.local_rank, criterion)
         if args.local_rank == 0:
             acc = test(model, test_loader, args.local_rank, criterion)
-        tvault.log_all(
-            model, tag=f"resnet_upscale_{learning_rate}", result=acc.item(), optimizer=optimizer
-        )
+        tags = {"language": "pytorch", "size": "0.5x", "learning_rate": learning_rate}
+        tvault.log_all(model, tags=tags, result=acc.item(), optimizer=optimizer)
