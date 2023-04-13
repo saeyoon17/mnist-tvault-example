@@ -26,7 +26,7 @@ Above command automatically generates model registry for your pytorch model. You
 tvault find_flag option allows you to look up different expereiments with simple cli. find_flag offers three different ways of exploring results.
 
 1. hash
-`tvault --find_flag --condition hash --hash f407ed0` shows all experiments with hash `2ba4adf`. It will show all tags within the registry.
+`tvault --find_flag --condition hash --hash 2ba4adf` shows all experiments with hash `2ba4adf`. It will show all tags within the registry.
 
 <p align="center">
 <img src="assets/custom_tag.png", height="150">
