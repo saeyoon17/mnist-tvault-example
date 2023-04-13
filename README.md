@@ -33,13 +33,13 @@ tvault find_flag option allows you to look up different expereiments with simple
 </p>
 
 2. result
-`tvault --find_flag --condition result --min 90 --max 100` shows all experiments with result value between 50 and 100.
+`tvault --find_flag --condition result --min 90 --max 100` shows all experiments with result value between 50 and 100. Note that the table is generated using model registry with most number of tags. Empty boxes mean that the tag has not been set for the registry.
 <p align="center">
 <img src="assets/result_fix.png", height="150">
 </p>
 
 3. tag
-`tvault --find_flag --condition tag --tag_type size --tag 0.5x` shows all experiments where the tag value is `0.5x` for tag type `size`. Note that the table is generated using model registry with most number of tags. Empty boxes mean that the tag has not been set for the registry.
+`tvault --find_flag --condition tag --tag_type size --tag 0.5x` shows all experiments where the tag value is `0.5x` for tag type `size`.
 <p align="center">
 <img src="assets/tag_fix.png", height="150">
 </p>
