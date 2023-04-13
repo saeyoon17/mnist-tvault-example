@@ -33,7 +33,7 @@ tvault find_flag option allows you to look up different expereiments with simple
 
 If your model registry has more tags, it will show all tags within the registry.
 <p align="center">
-<img src="assets/custom_tag.png", height="200">
+<img src="assets/custom_tag.png", height="150">
 </p>
 
 2. result
