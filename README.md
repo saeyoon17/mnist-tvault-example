@@ -9,11 +9,13 @@ This repository contains example usage of tvault. We use ResNet-18 model to clas
 Since the purpose of the repository is to let you experience model registry, we set train epoch to 5.
 In order to run experiment:
 
-`python -u -m torch.distributed.launch --nproc_per_node {gpu_num} --use_env train.py`.
-
 After experiment end, model registry will be created using statement in `train.py`:
 
-`tvault.log_all(model, tag=f"{tag}", result=f'{result}, optimizer=optimizer)`
+`tags = {"language": "pytorch", "size": "0.5x", "learning_rate": learning_rate}`
+
+`tvault.log_all(model, tags=tags, result=acc.item(), optimizer=optimizer)`.
+
+Note that you can add your custom tags in `tags` and apply them to your model registry.
 
 While model registry uses the commit hash, multiple registries with different settings can be made in single commit. In this case, model indexes are used to differentiate different model experiments.
 
@@ -27,6 +29,11 @@ tvault find_flag option allows you to look up different expereiments with simple
 `tvault --find_flag --condition hash --hash f407ed0` shows all experiments with hash `f407ed0`.
 <p align="center">
 <img src="assets/hash.png", height="200">
+</p>
+
+If your model registry has more tags, it will show all tags within the registry.
+<p align="center">
+<img src="assets/custom_tag.png", height="200">
 </p>
 
 2. result
