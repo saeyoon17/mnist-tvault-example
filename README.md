@@ -15,7 +15,7 @@ After experiment end, model registry will be created using statement in `train.p
 
 `tvault.log_all(model, tags=tags, result=acc.item(), optimizer=optimizer)`.
 
-Note that you can add your custom tags in `tags` and apply them to your model registry.
+Note that you can add your custom tags in `tags` and apply them to your model registry. Also, you can skip all other elements for logging except for model itself.
 
 While model registry uses the commit hash, multiple registries with different settings can be made in single commit. In this case, model indexes are used to differentiate different model experiments.
 
@@ -43,9 +43,9 @@ If your model registry has more tags, it will show all tags within the registry.
 </p>
 
 3. tag
-`tvault --find_flag --condition tag --tag upscale_3l_lr_0.01` shows all experiments with specified tag.
+`tvault --find_flag --condition tag --tag_type size --tag 0.5x` shows all experiments where the tag value is `0.5x` for tag type `size`.
 <p align="center">
-<img src="assets/tag.png", height="100">
+<img src="assets/tag.png", height="150">
 </p>
 
 
@@ -56,5 +56,11 @@ tvault diff_flag option allows you to look up difference of two models by specif
 provides the model difference between models in between two commits. 
 
 <p align="center">
-<img src="assets/diff.png" , height="300">
+<img src="assets/new_diff.png" , height="300">
+</p>
+
+Note that we have logged optimizer with the model. Hence, tvault is able to find out the diff related to optimizer.
+
+<p align="center">
+<img src="assets/optim_diff.png" , height="200">
 </p>
