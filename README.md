@@ -29,19 +29,19 @@ tvault find_flag option allows you to look up different expereiments with simple
 `tvault --find_flag --condition hash --hash 2ba4adf` shows all experiments with hash `2ba4adf`. It will show all tags within the registry.
 
 <p align="center">
-<img src="assets/custom_tag.png", height="150">
+<img src="assets/find_1.gif">
 </p>
 
 2. result
 `tvault --find_flag --condition result --min 90 --max 100` shows all experiments with result value between 50 and 100. Note that the table is generated using model registry with most number of tags. Empty boxes mean that the tag has not been set for the registry.
 <p align="center">
-<img src="assets/result_fix.png", height="150">
+<img src="assets/find_2.gif">
 </p>
 
 3. tag
 `tvault --find_flag --condition tag --tag_type size --tag 0.5x` shows all experiments where the tag value is `0.5x` for tag type `size`.
 <p align="center">
-<img src="assets/tag_fix.png", height="150">
+<img src="assets/find_3.gif">
 </p>
 
 
@@ -52,11 +52,12 @@ tvault diff_flag option allows you to look up difference of two models by specif
 provides the model difference between models in between two commits. 
 
 <p align="center">
-<img src="assets/new_diff.png" , height="300">
+<img src="assets/diff.gif">
 </p>
 
 Note that we have logged optimizer with the model. Hence, tvault is able to find out the diff related to optimizer.
+If source has changed, it can also show the diff that resides in source code as below.
 
 <p align="center">
-<img src="assets/optim_diff.png" , height="200">
+<img src="assets/new_diff.png" , height="300">
 </p>
