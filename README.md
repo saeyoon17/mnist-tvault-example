@@ -59,5 +59,5 @@ Note that we have logged optimizer with the model. Hence, tvault is able to find
 If source has changed, it can also show the diff that resides in source code as below.
 
 <p align="center">
-<img src="assets/new_diff.png" , height="300">
+<img src="assets/new_diff.png" , height="400">
 </p>
